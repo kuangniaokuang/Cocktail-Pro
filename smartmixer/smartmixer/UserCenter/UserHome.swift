@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,HistoryCellDelegate,NSFetchedResultsControllerDelegate,UIGestureRecognizerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate{
     
     //用户信息的View
@@ -44,8 +45,8 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     var clickGesture:UITapGestureRecognizer!
     
     class func UserHomeRoot()->UIViewController{
-        var userCenterController = UIStoryboard(name:"UserCenter"+deviceDefine,bundle:nil).instantiateInitialViewController() as UIViewController
-        return userCenterController
+        var userCenterController = UIStoryboard(name:"UserCenter"+deviceDefine,bundle:nil).instantiateInitialViewController()
+        return userCenterController!
     }
     
     override func viewDidLoad() {
@@ -117,11 +118,11 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     }
     
     //写入Document中
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var image = info["UIImagePickerControllerOriginalImage"] as UIImage
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        var image = info["UIImagePickerControllerOriginalImage"] as! UIImage
         userInfoBg.image = image
         var imageData = UIImagePNGRepresentation(image)
-        imageData.writeToFile(applicationDocumentsPath+"/mybg.png", atomically: false)
+        imageData!.writeToFile(applicationDocumentsPath+"/mybg.png", atomically: false)
         self.dismissViewControllerAnimated(true, completion: nil)
         if(osVersion<8 && deviceDefine != ""){
             popview.dismissPopoverAnimated(true)
@@ -131,7 +132,7 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     //@MARK:点击商城
     @IBAction func OnStoreClick(sender:UIButton){
         var baike:WebView = WebView.WebViewInit()
-        baike.WebTitle = "商城"
+        baike.strWebTitle = "商城"
         baike.WebUrl="http://www.smarthito.com"
         rootController.showOrhideToolbar(false)
         baike.showToolbar = true
@@ -192,8 +193,8 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     //告知窗口现在有多少个item需要添加
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
     {
-        let sectionInfo = self.fetchedResultsController.sections as [NSFetchedResultsSectionInfo]
-        let item = sectionInfo[section]
+        let sectionInfo = self.fetchedResultsController.sections
+        let item = sectionInfo![section]
         numberOfObjects = item.numberOfObjects
         if(numberOfObjects==0){
             nodataTip.hidden = false
@@ -207,7 +208,7 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     //处理单个View的添加
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as History
+        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as! History
         var indentifier = "his-cook"
         if(item.type==1){
             indentifier="his-addfaver"
@@ -217,7 +218,7 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
             indentifier="his-addhave"
         }
         
-        var cell :HistoryCell = tableView.dequeueReusableCellWithIdentifier(indentifier) as HistoryCell
+        var cell :HistoryCell = tableView.dequeueReusableCellWithIdentifier(indentifier) as! HistoryCell
         if(deviceDefine==""){
             cell.scroll.contentSize = CGSize(width: 380, height: 50)
         }else{
@@ -250,10 +251,11 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     func historyCell(sender:HistoryCell){
         skipUpdate = true
         var indexPath:NSIndexPath=self.historyTableView.indexPathForCell(sender)!
-        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as History
-        var error: NSError? = nil
+        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as! History
         managedObjectContext.deleteObject(item)
-        if !managedObjectContext.save(&error) {
+        do{
+            try managedObjectContext.save()
+        }catch{
             abort()
         }
         self.historyTableView?.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
@@ -264,7 +266,7 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         rootController.showOrhideToolbar(false)
         var indexPath:NSIndexPath=self.historyTableView.indexPathForCell(sender)!
-        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as History
+        let item = self.fetchedResultsController.objectAtIndexPath(indexPath) as! History
         if(item.type==0||item.type==1){
             var recipe=DataDAO.getOneRecipe(item.refid.integerValue)
             if(deviceDefine==""){
@@ -289,7 +291,7 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
     
     //@MARK:历史数据的添加处理
     class func addHistory(type:Int,id refId:Int,thumb imageThumb:String,name showName:String){
-        var history = NSEntityDescription.insertNewObjectForEntityForName("History", inManagedObjectContext: managedObjectContext) as History
+        var history = NSEntityDescription.insertNewObjectForEntityForName("History", inManagedObjectContext: managedObjectContext) as! History
         history.type = type
         history.refid = refId
         history.thumb = imageThumb
@@ -298,8 +300,9 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
         if(type==0){
             var usernum = NSUserDefaults.standardUserDefaults().integerForKey("UserCook")+1
             NSUserDefaults.standardUserDefaults().setInteger(usernum, forKey: "UserCook")
-            var error: NSError? = nil
-            if !managedObjectContext.save(&error) {
+            do{
+                try managedObjectContext.save()
+            }catch{
                 abort()
             }
         }else if(type==1){
@@ -345,8 +348,9 @@ class UserHome: UIViewController,UIScrollViewDelegate,UITableViewDelegate,Histor
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         _fetchedResultsController = aFetchedResultsController
         _fetchedResultsController?.delegate = self
-        var error: NSError? = nil
-        if !_fetchedResultsController!.performFetch(&error) {
+        do{
+            try _fetchedResultsController?.performFetch()
+        }catch{
             abort()
         }
         return _fetchedResultsController!

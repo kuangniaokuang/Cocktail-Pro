@@ -53,7 +53,7 @@ class Welcome: UIViewController , UIGestureRecognizerDelegate {
     var firstPop:Bool=true
     
     class func WelcomeInit()->Welcome{
-       var welcome = UIStoryboard(name:"Launch"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("welcome") as Welcome
+       var welcome = UIStoryboard(name:"Launch"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("welcome") as! Welcome
         return welcome
     }
     
@@ -89,9 +89,9 @@ class Welcome: UIViewController , UIGestureRecognizerDelegate {
     func pan(sender:UIPanGestureRecognizer){
         var currentPostion = sender.translationInView(self.view)
         if (self.panGesture.state == UIGestureRecognizerState.Began) {
-            current_bg=(self.valueForKey("page\((currentIndex))_bg") as UIImageView!)
-            current_content=(self.valueForKey("page\((currentIndex))_content") as UIImageView!)
-            current_desc=(self.valueForKey("page\((currentIndex))_desc") as UIImageView!)
+            current_bg=(self.valueForKey("page\((currentIndex))_bg") as! UIImageView!)
+            current_content=(self.valueForKey("page\((currentIndex))_content") as! UIImageView!)
+            current_desc=(self.valueForKey("page\((currentIndex))_desc") as! UIImageView!)
         }else if(self.panGesture.state == UIGestureRecognizerState.Ended){
             if(show_bg != nil){
                 pageToShowAnimate(currentPostion.x)
@@ -112,18 +112,18 @@ class Welcome: UIViewController , UIGestureRecognizerDelegate {
         }else{
             if((currentIndex<4) && currentPostion.x < -20 && currentPostion.x>(-maxpan)){//向左滑动
                 if(show_bg == nil || direction){
-                    show_bg=(self.valueForKey("page\((currentIndex+1))_bg") as UIImageView!)
-                    show_content=(self.valueForKey("page\((currentIndex+1))_content") as UIImageView!)
-                    show_desc=(self.valueForKey("page\((currentIndex+1))_desc") as UIImageView!)
+                    show_bg=(self.valueForKey("page\((currentIndex+1))_bg") as! UIImageView!)
+                    show_content=(self.valueForKey("page\((currentIndex+1))_content") as! UIImageView!)
+                    show_desc=(self.valueForKey("page\((currentIndex+1))_desc") as! UIImageView!)
                     direction = false
                 }
                 panToHide(currentPostion.x);
                 pageToShow(currentPostion.x);
             } else if((currentIndex>1) && currentPostion.x>20 && currentPostion.x<maxpan){//向右滑动
                 if(show_bg == nil || !direction){
-                    show_bg=(self.valueForKey("page\((currentIndex-1))_bg") as UIImageView!)
-                    show_content=(self.valueForKey("page\((currentIndex-1))_content") as UIImageView!)
-                    show_desc=(self.valueForKey("page\((currentIndex-1))_desc") as UIImageView!)
+                    show_bg=(self.valueForKey("page\((currentIndex-1))_bg") as! UIImageView!)
+                    show_content=(self.valueForKey("page\((currentIndex-1))_content") as! UIImageView!)
+                    show_desc=(self.valueForKey("page\((currentIndex-1))_desc") as! UIImageView!)
                     direction = true
                 }
                 panToHide(currentPostion.x);

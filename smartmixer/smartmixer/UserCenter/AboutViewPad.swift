@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 8.0, *)
 class AboutViewPad: UIViewController ,NumberDelegate {
 
     var aboutTable:AboutViewPhone!
@@ -15,7 +16,7 @@ class AboutViewPad: UIViewController ,NumberDelegate {
     var aboutDetail:AboutDetail!
     
     class func AboutViewPadInit()->AboutViewPad{
-        var aboutview = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutViewPad") as AboutViewPad
+        var aboutview = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutViewPad") as! AboutViewPad
         return aboutview
     }
     

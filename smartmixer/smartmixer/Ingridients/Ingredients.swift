@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearchBarDelegate{
     
     @IBOutlet var itableView:UITableView!
@@ -23,8 +24,8 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
     var numberOfitems:Int = 0
     
     class func IngredientsRoot()->UIViewController{
-        var ingridientController = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateInitialViewController() as UIViewController
-        return ingridientController
+        var ingridientController = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateInitialViewController()
+        return ingridientController!
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,12 +81,12 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
             ingredientCollection = IngredientCollection.IngredientCollectionInit()
             ingredientCollection.NavigationController = self.navigationController
             ingredientCollection.CatagoryId = -1
-            ingredientCollection.catagoryName = searchBar.text
+            ingredientCollection.catagoryName = searchBar.text!
             self.navigationController?.pushViewController(ingredientCollection!, animated: true)
             rootController.showOrhideToolbar(false)
         }else{
             ingredientCollection.CatagoryId = -1
-            ingredientCollection.catagoryName = searchBar.text
+            ingredientCollection.catagoryName = searchBar.text!
             ingredientCollection.reloadData()
         }
         
@@ -94,8 +95,8 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
     //告知窗口现在有多少个item需要添加
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
     {
-        let sectionInfo = self.fetchedResultsController.sections as [NSFetchedResultsSectionInfo]
-        let item = sectionInfo[section]
+        let sectionInfo = self.fetchedResultsController.sections
+        let item = sectionInfo![section]
         numberOfitems = item.numberOfObjects + 1
         return numberOfitems
     }
@@ -103,7 +104,7 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
     //处理单个View的添加
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-        var tableCell:IngredientCategory = tableView.dequeueReusableCellWithIdentifier("categoryCell") as IngredientCategory
+        var tableCell:IngredientCategory = tableView.dequeueReusableCellWithIdentifier("categoryCell") as! IngredientCategory
         if(indexPath.row==0){
             tableCell.title.text = "器具"
             tableCell.title_eng.text = "Appliances"
@@ -111,14 +112,14 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
             tableCell.thumb.image = UIImage(named: "C_Appliances.jpg")
         }else{
             var index = NSIndexPath(forRow: indexPath.row - 1, inSection: indexPath.section)
-            let item = self.fetchedResultsController.objectAtIndexPath(index) as Category
+            let item = self.fetchedResultsController.objectAtIndexPath(index) as! Category
             tableCell.title.text = item.name
             tableCell.title_eng.text = item.nameEng
             tableCell.tag = item.id.integerValue
             tableCell.thumb.image = UIImage(named: item.thumb)
         }
         tableCell.selectedBackgroundView = UIView(frame: tableCell.frame)
-        tableCell.selectedBackgroundView.backgroundColor = UIColor.whiteColor()
+        tableCell.selectedBackgroundView!.backgroundColor = UIColor.whiteColor()
         tableCell.title.highlightedTextColor = UIColor.redColor()
         tableCell.title_eng.highlightedTextColor = UIColor.redColor()
         return tableCell
@@ -126,7 +127,7 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
     
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!)
     {
-        var cell = tableView.cellForRowAtIndexPath(indexPath) as IngredientCategory
+        var cell = tableView.cellForRowAtIndexPath(indexPath) as! IngredientCategory
         if(deviceDefine==""){
             ingredientCollection = IngredientCollection.IngredientCollectionInit()
             ingredientCollection.NavigationController = self.navigationController
@@ -154,9 +155,10 @@ class Ingredients: UIViewController , NSFetchedResultsControllerDelegate,UISearc
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
-        
-        var error: NSError? = nil
-        if !_fetchedResultsController!.performFetch(&error) {
+
+        do{
+            try _fetchedResultsController?.performFetch()
+        }catch{
             abort()
         }
         

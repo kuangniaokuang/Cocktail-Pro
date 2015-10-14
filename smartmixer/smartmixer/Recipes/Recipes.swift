@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class Recipes: UIViewController, SearchBeginDelegate ,NumberDelegate,UISearchBarDelegate{
     
     @IBOutlet var parentView: UIView?
@@ -42,13 +43,13 @@ class Recipes: UIViewController, SearchBeginDelegate ,NumberDelegate,UISearchBar
     var titleView:UIView?
     
     class func RecipesInit()->UIViewController{
-        var recipes = UIStoryboard(name: "Recipes"+deviceDefine, bundle: nil).instantiateInitialViewController() as UIViewController
-        return recipes
+        var recipes = UIStoryboard(name: "Recipes"+deviceDefine, bundle: nil).instantiateInitialViewController()
+        return recipes!
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        (rootSideMenu.SideView as CategoryMenu).delegate = self
+        (rootSideMenu.SideView as! CategoryMenu).delegate = self
         if(navTitle != nil){
             var lable = UILabel()
             lable.frame = CGRect(x: 0, y: 0, width: 100, height: 30)
@@ -92,7 +93,7 @@ class Recipes: UIViewController, SearchBeginDelegate ,NumberDelegate,UISearchBar
     }
     
     func scrollToTop(){
-        recipesCollection?.icollectionView.setContentOffset(CGPoint.zeroPoint, animated: true)
+        recipesCollection?.icollectionView.setContentOffset(CGPoint.zero, animated: true)
     }
     
     func NumberAction(sender:UIViewController,num Number:Int){
@@ -135,7 +136,7 @@ class Recipes: UIViewController, SearchBeginDelegate ,NumberDelegate,UISearchBar
     
     //点击搜索回车按钮
     func SearchBeginAction(sender: RecipesSearch,hide:Bool) {
-        recipesSearch!.keyWord = searchBar!.text
+        recipesSearch!.keyWord = searchBar!.text!
         recipesCollection!.ReloadData()
         if(hide){
             UIView.animateWithDuration(0.2, animations: {

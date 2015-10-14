@@ -15,10 +15,12 @@ import UIKit
 */
 
 //自定义一个搜索设置完毕开始搜索的消息
+@available(iOS 8.0, *)
 protocol HomeDirectionSyncDelegate:NSObjectProtocol{
     func homeDirectionSync(sender:HomeDirectionSync,NeedRefresh refresh:Bool)
 }
 
+@available(iOS 8.0, *)
 class HomeDirectionSync {
     
     init(){
@@ -41,7 +43,7 @@ class HomeDirectionSync {
         NSThread.detachNewThreadSelector("getServerVersionSync:", toTarget:self,withObject:self)
     }
     @objc func getServerVersionSync(sender:AnyObject){
-        var owner = sender as HomeDirectionSync
+        var owner = sender as! HomeDirectionSync
         var request = HTTPTask()
         request.GET(owner.baseUrl+"version.txt", parameters: nil, success: {(response: HTTPResponse) in
             if response.responseObject != nil {
@@ -49,13 +51,17 @@ class HomeDirectionSync {
                 if(localVersion==nil){
                     localVersion=""
                 }
-                let data = response.responseObject as NSData
+                let data = response.responseObject as! NSData
                 let remoteVersion = NSString(data: data, encoding: NSUTF8StringEncoding)
                 if(localVersion != remoteVersion || owner.byForce){//两地的版本字符串不匹配或是强制更新，开始下载新的
                     let fileManager = NSFileManager.defaultManager()
                     var isDir:ObjCBool=false
                     if !fileManager.fileExistsAtPath(applicationDocumentsPath + "/homedirections/",isDirectory: &isDir) {
-                        fileManager.createDirectoryAtPath(applicationDocumentsPath + "/homedirections/", withIntermediateDirectories: true, attributes: nil, error: nil)
+                        do{
+                            try fileManager.createDirectoryAtPath(applicationDocumentsPath + "/homedirections/", withIntermediateDirectories: true, attributes: nil)
+                        }catch{
+                            
+                        }
                     }
                     NSUserDefaults.standardUserDefaults().setObject(remoteVersion, forKey: "HomeDirection")
                     
@@ -81,7 +87,7 @@ class HomeDirectionSync {
                 if response.responseObject != nil {
                     //数据下载成功，将数据解压到用户牡蛎中
                     var zip = ZipArchive()
-                    zip.UnzipOpenFile((response.responseObject! as NSURL).path)
+                    zip.UnzipOpenFile((response.responseObject! as! NSURL).path)
                     needRefresh=zip.UnzipFileTo(applicationDocumentsPath+"/homedirections/", overWrite: true)
                     if(needRefresh && sender.delegate != nil){//唯一的操作成功的返回
                         sender.delegate.homeDirectionSync(sender, NeedRefresh: true)

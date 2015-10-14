@@ -24,7 +24,7 @@ class WeightView: UIViewController {
     var clipWeight:CGFloat!=0
     
     class func WeightViewInit()->WeightView{
-        var weightView = UIStoryboard(name:"Device"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("weightContainer") as WeightView
+        var weightView = UIStoryboard(name:"Device"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("weightContainer") as! WeightView
         return weightView
     }
     

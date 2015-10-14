@@ -36,12 +36,16 @@ var persistentStoreCoordinator: NSPersistentStoreCoordinator! = {
     var storeUrl = applicationDocumentsDirectory.URLByAppendingPathComponent("cocktailpro.sqlite")
     if !NSFileManager.defaultManager().fileExistsAtPath(storeUrl.path!) {
         var preloadUrl = NSURL.fileURLWithPath(NSBundle.mainBundle().pathForResource("cocktailpro", ofType: "sqlite")!)
-        if !NSFileManager.defaultManager().copyItemAtURL(preloadUrl!, toURL: storeUrl, error: &error) {
+        do{
+            try NSFileManager.defaultManager().copyItemAtURL(preloadUrl, toURL: storeUrl)
+        }catch{
             abort()
         }
     }
     var pStore = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-    if pStore.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeUrl, options: nil, error: &error) == nil {
+    do{
+        try pStore.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeUrl, options: nil)
+    }catch{
         abort()
     }
     return pStore
@@ -63,9 +67,12 @@ let UnitDictory:Dictionary<Int, String> = {
     let sortDescriptors = [sortDescriptor]
     fetchRequest.sortDescriptors = sortDescriptors
     
-    var error: NSError? = nil
-    
-    var items:[Unit] = managedObjectContext.executeFetchRequest(fetchRequest, error: &error) as [Unit]
+    var items:[Unit]!
+    do{
+        items = try managedObjectContext.executeFetchRequest(fetchRequest) as! [Unit]
+    }catch{
+        
+    }
     
     var units = Dictionary<Int, String>()
     

@@ -29,12 +29,12 @@ public class HTTPUpload: NSObject {
     /// Tries to determine the mime type from the fileUrl extension.
     func updateMimeType() {
         if mimeType == nil && fileUrl != nil {
-            var UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileUrl?.pathExtension as NSString?, nil);
-            var str = UTTypeCopyPreferredTagWithClass(UTI.takeUnretainedValue(), kUTTagClassMIMEType);
+            var UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (fileUrl?.pathExtension as NSString?)!, nil);
+            var str = UTTypeCopyPreferredTagWithClass(UTI!.takeUnretainedValue(), kUTTagClassMIMEType);
             if (str == nil) {
                 mimeType = "application/octet-stream";
             } else {
-                mimeType = str.takeUnretainedValue() as NSString
+                mimeType = str!.takeUnretainedValue() as String
             }
         }
     }

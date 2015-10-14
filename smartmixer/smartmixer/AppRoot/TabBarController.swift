@@ -12,6 +12,7 @@ protocol ChangeTableDelegate{
     func changeIndex ( index: Int)
 }
 
+@available(iOS 8.0, *)
 class TabBarController: UIViewController {
     //
     @IBOutlet  var  senceButton : UIButton!
@@ -48,7 +49,7 @@ class TabBarController: UIViewController {
     }
     
     class func TabBarControllerInit()->TabBarController{
-        var tabBarController = UIStoryboard(name:"Main"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("tabBarController") as TabBarController
+        var tabBarController = UIStoryboard(name:"Main"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("tabBarController") as! TabBarController
         return tabBarController
     }
     

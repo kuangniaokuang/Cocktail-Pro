@@ -22,7 +22,7 @@ class PopupView: UIView {
     //父View
     @IBOutlet var parentView:UIView!
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         //self.alpha = 0.88
     }
@@ -228,7 +228,7 @@ class PopupView: UIView {
         }
         
         CGContextClosePath(context)
-        CGContextDrawPath(context, kCGPathFillStroke)
+        CGContextDrawPath(context, CGPathDrawingMode.Stroke)
     }
     
 }

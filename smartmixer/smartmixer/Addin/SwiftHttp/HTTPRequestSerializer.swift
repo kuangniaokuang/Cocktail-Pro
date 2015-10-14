@@ -17,7 +17,7 @@ extension String {
         :returns: Encoded version of of string it was called as.
     */
     var escaped: String {
-        return CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,self,"[].",":/?&=;+!@#$()',*",CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding))
+        return CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,self,"[].",":/?&=;+!@#$()',*",CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) as String
     }
 }
 
@@ -85,7 +85,7 @@ public class HTTPRequestSerializer: NSObject {
         var isMultiForm = false
         //do a check for upload objects to see if we are multi form
         if let params = parameters {
-            for (name,object: AnyObject) in params {
+            for (name,object) in params {
                 if object is HTTPUpload {
                     isMultiForm = true
                     break
@@ -112,8 +112,8 @@ public class HTTPRequestSerializer: NSObject {
         }
         if isURIParam(method) {
             var para = (request.URL!.query != nil) ? "&" : "?"
-            var newUrl = "\(request.URL!.absoluteString!)"
-            if countElements(queryString) > 0 {
+            var newUrl = "\(request.URL!.absoluteString)"
+            if queryString.characters.count > 0 {
                 newUrl += "\(para)\(queryString)"
             }
             request.URL = NSURL(string: newUrl)
@@ -130,9 +130,9 @@ public class HTTPRequestSerializer: NSObject {
     
     ///convert the parameter dict to its HTTP string representation
     func stringFromParameters(parameters: Dictionary<String,AnyObject>) -> String {
-        return join("&", map(serializeObject(parameters, key: nil), {(pair) in
+        return (serializeObject(parameters, key: nil).map({(pair) in
             return pair.stringValue()
-            }))
+            })).joinWithSeparator("&")
     }
     
     ///check if enum is a HTTPMethod that requires the params in the URL
@@ -148,12 +148,12 @@ public class HTTPRequestSerializer: NSObject {
         var collect = Array<HTTPPair>()
         if let array = object as? Array<AnyObject> {
             for nestedValue : AnyObject in array {
-                collect.extend(self.serializeObject(nestedValue,key: "\(key!)[]"))
+                collect.appendContentsOf(self.serializeObject(nestedValue,key: "\(key!)[]"))
             }
         } else if let dict = object as? Dictionary<String,AnyObject> {
-            for (nestedKey, nestedObject: AnyObject) in dict {
+            for (nestedKey, nestedObject) in dict {
                 var newKey = key != nil ? "\(key!)[\(nestedKey)]" : nestedKey
-                collect.extend(self.serializeObject(nestedObject,key: newKey))
+                collect.appendContentsOf(self.serializeObject(nestedObject,key: newKey))
             }
         } else {
             collect.append(HTTPPair(value: object, key: key))
@@ -166,7 +166,7 @@ public class HTTPRequestSerializer: NSObject {
         var mutData = NSMutableData()
         var files = Dictionary<String,HTTPUpload>()
         var notFiles = Dictionary<String,AnyObject>()
-        for (key, object: AnyObject) in parameters {
+        for (key, object) in parameters {
             if let upload = object as? HTTPUpload {
                 files[key] = upload
             } else {
@@ -193,9 +193,9 @@ public class HTTPRequestSerializer: NSObject {
             }
         }
         if !noParams {
-            let paramStr = join(boundSplit, map(serializeObject(notFiles, key: nil), {(pair) in
+            let paramStr = (serializeObject(notFiles, key: nil).map({(pair) in
                 return "\(self.multiFormHeader(pair.key, fileName: nil, type: nil, multiCRLF: multiCRLF))\(pair.getValue())"
-                }))
+                })).joinWithSeparator(boundSplit)
             mutData.appendData(paramStr.dataUsingEncoding(self.stringEncoding)!)
         }
         mutData.appendData("\(multiCRLF)--\(boundary)--\(multiCRLF)".dataUsingEncoding(self.stringEncoding)!)
@@ -265,13 +265,18 @@ public class JSONRequestSerializer: HTTPRequestSerializer {
             return super.createRequest(url, method: method, parameters: parameters)
         }
         var request = newRequest(url, method: method)
-        var error: NSError?
+        var err: NSError?
         if parameters != nil {
             var charset = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
             request.setValue("application/json; charset=\(charset)", forHTTPHeaderField: self.contentTypeKey)
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(parameters!, options: NSJSONWritingOptions(), error:&error)
+            do{
+               request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(parameters!, options: NSJSONWritingOptions())
+            }catch{
+                err = error as NSError
+            }
+            
         }
-        return (request, error)
+        return (request, err)
     }
     
 }

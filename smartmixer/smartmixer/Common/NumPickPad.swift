@@ -33,7 +33,7 @@ class NumPickPad: UIViewController {
     var delegate:NumberDelegate!
     
     class func NumPickPadInit()->NumPickPad {
-        var numPickPanel = UIStoryboard(name: "Common"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("numPickPad")as NumPickPad
+        var numPickPanel = UIStoryboard(name: "Common"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("numPickPad")as! NumPickPad
         return numPickPanel
     }
     

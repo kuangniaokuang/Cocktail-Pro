@@ -4,6 +4,7 @@ import UIKit
 
 
 
+@available(iOS 8.0, *)
 class SideMenuController: UIViewController,UIGestureRecognizerDelegate {
     
     var _needSwipeShowMenu:Bool!
@@ -68,7 +69,7 @@ class SideMenuController: UIViewController,UIGestureRecognizerDelegate {
         self.initData()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -157,7 +158,7 @@ class SideMenuController: UIViewController,UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer!) -> Bool
     {
         if gestureRecognizer == self.panGestureRecognizer {
-            var panGesture = gestureRecognizer as UIPanGestureRecognizer
+            var panGesture = gestureRecognizer as! UIPanGestureRecognizer
             var translation = panGesture.translationInView(self.view)
             if panGesture.velocityInView(self.view).x < 600 && abs(translation.x)/abs(translation.y)>1 {
                 return true

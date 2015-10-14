@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 @IBDesignable class RecipeThumbail : UICollectionViewCell {
     
     @IBOutlet var thumbnailImage: UIImageView!
@@ -55,8 +56,9 @@ import CoreData
             favButton.image = UIImage(named: "Heartno.png")
             UserHome.removeHistory(1, id: CurrentRecipe.id.integerValue)
         }
-        var error: NSError? = nil
-        if !managedObjectContext.save(&error) {
+        do{
+            try managedObjectContext.save()
+        }catch{
             abort()
         }
     }
@@ -71,7 +73,14 @@ import CoreData
         self.descriptionLabel.text = item.des
         self.alcohol.text = "\(item.alcohol) °"
         self.coverd.text = String(format:"%.0f", item.coverd.doubleValue*100)+"%"
-        self.thumbnailImage.image = UIImage(named: item.thumb)
+        //将url转化为NSData 不是网址的时候，imageData 为 nil
+        let imageData = NSData(contentsOfURL: NSURL(string: item.thumb)!)
+        if imageData == nil{
+            self.thumbnailImage.image = UIImage(named: item.thumb)
+        }else{
+            //网上的照片先转换成NSData
+            self.thumbnailImage.image = UIImage(data: imageData!)
+        }
         if(item.isfavorite == true){
             favButton.image = UIImage(named: "Heartyes.png")
         }else{

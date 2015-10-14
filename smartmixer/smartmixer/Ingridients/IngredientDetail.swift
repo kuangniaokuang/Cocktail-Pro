@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class IngredientDetail: UIViewController {
     
     @IBOutlet var image:UIImageView!
@@ -77,7 +78,7 @@ class IngredientDetail: UIViewController {
     }
     
     class func IngredientDetailInit()->IngredientDetail{
-        var ingredientDetail = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("ingredientDetail") as IngredientDetail
+        var ingredientDetail = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("ingredientDetail") as! IngredientDetail
         return ingredientDetail
     }
     
@@ -98,7 +99,7 @@ class IngredientDetail: UIViewController {
     
     @IBAction func tuBuy(sender: UIButton){
         webView=WebView.WebViewInit()
-        webView.WebTitle="商城"
+        webView.strWebTitle="商城"
         self.navigationController?.pushViewController(webView, animated: true)
     }
     
@@ -112,9 +113,10 @@ class IngredientDetail: UIViewController {
             iHave.image = UIImage(named: "Heartno.png")
             UserHome.removeHistory(2, id: ingridient.id.integerValue)
         }
-        var error: NSError? = nil
-        if !managedObjectContext.save(&error) {
-            abort()
+        do{
+            try managedObjectContext.save()
+        }catch{
+            
         }
     }
     
@@ -161,8 +163,8 @@ class IngredientDetail: UIViewController {
     }
     
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
-        var cell = collectionView.cellForItemAtIndexPath(indexPath) as IngredientThumb
-        var materials = UIStoryboard(name:"Ingredients",bundle:nil).instantiateViewControllerWithIdentifier("ingredientDetail") as IngredientDetail
+        var cell = collectionView.cellForItemAtIndexPath(indexPath) as! IngredientThumb
+        var materials = UIStoryboard(name:"Ingredients",bundle:nil).instantiateViewControllerWithIdentifier("ingredientDetail") as! IngredientDetail
         //self.navigationController.pushViewController(materials, animated: true)
     }
     

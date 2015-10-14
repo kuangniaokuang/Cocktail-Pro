@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 8.0, *)
 class AboutDetail: UIViewController,UITextFieldDelegate {
     
     @IBOutlet var about:UIView!
@@ -27,7 +28,7 @@ class AboutDetail: UIViewController,UITextFieldDelegate {
     var currentTag:Int = 0
     
     class func AboutDetailInit()->AboutDetail{
-       var aboutDetail = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutDetail") as AboutDetail
+       var aboutDetail = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutDetail") as! AboutDetail
         return aboutDetail
     }
     override func viewDidLoad() {
@@ -112,10 +113,18 @@ class AboutDetail: UIViewController,UITextFieldDelegate {
             var alert = UIAlertView(title: "提示", message: "谢谢您的反馈！我们将尽快处理！",delegate: nil, cancelButtonTitle: "确定")
             alert.show()
             var request = HTTPTask()
-            request.GET("http://www.smarthito.com/app/feedback.action", parameters: ["response": responseText.text,"keyword":"nicaiyahehe"], success: {(response: HTTPResponse) in
+            var params = [String:String]()
+            params["response"] = responseText.text
+            params["keyword"] = "nicaiyahehe"
+            request.GET("http://www.smarthito.com/app/feedback.action", parameters:params, success: {(response: HTTPResponse) in
                 if response.responseObject != nil {
-                    let data = NSJSONSerialization.JSONObjectWithData(response.responseObject as NSData, options: NSJSONReadingOptions.MutableContainers, error: nil) as NSDictionary
-                    NSLog((data["keyword"] as String))
+                    var data : NSDictionary!
+                    do{
+                        data = try NSJSONSerialization.JSONObjectWithData(response.responseObject as! NSData, options: NSJSONReadingOptions.MutableContainers) as! NSDictionary
+                    }catch{
+                        
+                    }
+                    NSLog((data["keyword"] as! String))
                     self.responseText.text=""
                 }
             },failure: {(error: NSError, response: HTTPResponse?) in

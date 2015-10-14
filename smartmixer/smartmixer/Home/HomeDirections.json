@@ -2,7 +2,7 @@
     "version":"1.0",
     "data":	[
              {"title":"当季主打","image":"sence_djzd.jpg","data":[80,150,165,129,66]},
-             {"title":"调制入门","image":"sence_tzrm.jpg","data":[162,170,122,22,90]},
+             {"title":"烘焙入门","image":"sence_tzrm.jpg","data":[162,170,122,22,90]},
              {"title":"我是女生","image":"sence_wsns.jpg","data":[157,173,3,120,118,117]},
              {"title":"女神","image":"sence_ns.jpg","data":[173,160,3,120,118,117]},
              {"title":"不胜酒力","image":"sence_bsjl.jpg","data":[125,2,113,117]},

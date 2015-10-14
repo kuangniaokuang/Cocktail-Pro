@@ -10,8 +10,10 @@ import UIKit
 
 //@MARK:一些用得着的静态变量
 //这个是基础的控制类
+@available(iOS 8.0, *)
 var rootController:RootViewController!
 //这是滑动分类的管理
+@available(iOS 8.0, *)
 var rootSideMenu:SideMenuController!
 //
 let appID:String = "923816796"
@@ -23,6 +25,7 @@ var deviceDefine:String="_ipad"
 //系统版本
 var osVersion:Double=8.0
 
+@available(iOS 8.0, *)
 class RootViewController: UITabBarController , ChangeTableDelegate{
     
     //欢迎页的控件
@@ -65,8 +68,8 @@ class RootViewController: UITabBarController , ChangeTableDelegate{
         if(!NSUserDefaults.standardUserDefaults().boolForKey("Launched_V1.0.0")){
             //在文档中默认加一个用户头像
             var image = UIImage(named: "headDefault")
-            var imageData = UIImagePNGRepresentation(image)
-            imageData.writeToFile(applicationDocumentsPath+"/myimage.png", atomically: false)
+            var imageData = UIImagePNGRepresentation(image!)
+            imageData!.writeToFile(applicationDocumentsPath+"/myimage.png", atomically: false)
             
             //设置一些基础的数据
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "Launched_V1.0.0")
@@ -130,10 +133,10 @@ class RootViewController: UITabBarController , ChangeTableDelegate{
         {
         case 1:
             if(self.selectedIndex == index){
-                var curent = self.selectedViewController! as SideMenuController
-                var item:UIViewController = (curent.rootViewController as UINavigationController).topViewController
+                var curent = self.selectedViewController! as! SideMenuController
+                var item:UIViewController = (curent.rootViewController as! UINavigationController).topViewController!
                 if(item.isKindOfClass(Recipes) == true){
-                    (item as Recipes).scrollToTop()
+                    (item as! Recipes).scrollToTop()
                 }
             }
             break

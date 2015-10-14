@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class ContainerDetail: UIViewController , NSFetchedResultsControllerDelegate {
     
     //绑定缩略图
@@ -37,7 +38,7 @@ class ContainerDetail: UIViewController , NSFetchedResultsControllerDelegate {
     var CurrentContainer:Container!
     
     class func ContainerDetailInit()->ContainerDetail{
-        var containerDetail = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("containerDetail") as ContainerDetail
+        var containerDetail = UIStoryboard(name:"Ingredients"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("containerDetail") as! ContainerDetail
         return containerDetail
     }
     
@@ -75,7 +76,7 @@ class ContainerDetail: UIViewController , NSFetchedResultsControllerDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if(self.contentScroll != nil){//iPhone的滚动
-            var size = desc.text.textSizeWithFont(desc.font, constrainedToSize: CGSize(width:310, height:1000))
+            var size = desc.text.textSizeWithFont(desc.font!, constrainedToSize: CGSize(width:310, height:1000))
             desc.frame = CGRect(x: desc.frame.origin.x, y: desc.frame.origin.y, width: 310, height: size.height+20)
             contentScroll.contentSize = CGSize(width: 320, height: 520+size.height)
             self.view.layoutIfNeeded()
@@ -106,8 +107,9 @@ class ContainerDetail: UIViewController , NSFetchedResultsControllerDelegate {
             collected.image = UIImage(named: "Heartno.png")
             UserHome.removeHistory(3, id: CurrentContainer.id.integerValue)
         }
-        var error: NSError? = nil
-        if !managedObjectContext.save(&error) {
+        do{
+            try managedObjectContext.save()
+        }catch{
             abort()
         }
         

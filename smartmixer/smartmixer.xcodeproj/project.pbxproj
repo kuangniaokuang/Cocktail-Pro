@@ -176,6 +176,8 @@
 		67FBFA8019DE6D7100A1F5D0 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FBFA7F19DE6D7100A1F5D0 /* Recipe.swift */; };
 		67FBFA8219DE6D7200A1F5D0 /* RecipeStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FBFA8119DE6D7200A1F5D0 /* RecipeStep.swift */; };
 		67FBFA8419DE72D800A1F5D0 /* time-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 67FBFA8319DE72D800A1F5D0 /* time-thumb.png */; };
+		6EE01E141BCCF18D0073D6BC /* CookingStepCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE01E131BCCF18D0073D6BC /* CookingStepCell.swift */; settings = {ASSET_TAGS = (); }; };
+		6EE01E161BCCF90B0073D6BC /* RadiusTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE01E151BCCF90B0073D6BC /* RadiusTest.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,6 +373,8 @@
 		67FBFA7F19DE6D7100A1F5D0 /* Recipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Recipe.swift; path = DataCore/Model/Recipe.swift; sourceTree = "<group>"; };
 		67FBFA8119DE6D7200A1F5D0 /* RecipeStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecipeStep.swift; path = DataCore/Model/RecipeStep.swift; sourceTree = "<group>"; };
 		67FBFA8319DE72D800A1F5D0 /* time-thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "time-thumb.png"; sourceTree = "<group>"; };
+		6EE01E131BCCF18D0073D6BC /* CookingStepCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CookingStepCell.swift; sourceTree = "<group>"; };
+		6EE01E151BCCF90B0073D6BC /* RadiusTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadiusTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -464,6 +468,7 @@
 				67029C2719CE0A21001C425F /* SideMenuController.swift */,
 				67400E2A19BFE78200F800B9 /* Stars.swift */,
 				678D913019DBE0400026A810 /* WebView.swift */,
+				6EE01E151BCCF90B0073D6BC /* RadiusTest.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -499,6 +504,7 @@
 		67400E5B19BFE78200F800B9 /* Recipes */ = {
 			isa = PBXGroup;
 			children = (
+				6EE01E131BCCF18D0073D6BC /* CookingStepCell.swift */,
 				6736580B19ECCDB200199581 /* Recipes_ipad.storyboard */,
 				67400E5D19BFE78200F800B9 /* Recipes.storyboard */,
 				67029C2D19CE2243001C425F /* CategoryCell.swift */,
@@ -825,6 +831,7 @@
 		67CE105C19BFE6C400434A8D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = smarthito;
 				TargetAttributes = {
@@ -985,6 +992,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6755A12719E921D4000AC8EF /* Baike.swift in Sources */,
+				6EE01E141BCCF18D0073D6BC /* CookingStepCell.swift in Sources */,
 				67400EB819BFE78200F800B9 /* IngredientDetail.swift in Sources */,
 				67400E9919BFE78200F800B9 /* FilletButton.swift in Sources */,
 				67400EBA19BFE78200F800B9 /* Ingredients.swift in Sources */,
@@ -1018,6 +1026,7 @@
 				67400E9D19BFE78200F800B9 /* Stars.swift in Sources */,
 				67C5968019EEC00B00EC43FE /* WelcomePlus.swift in Sources */,
 				67400E9C19BFE78200F800B9 /* RadiusView.swift in Sources */,
+				6EE01E161BCCF90B0073D6BC /* RadiusTest.swift in Sources */,
 				67400ECD19BFE78200F800B9 /* RecipeThumbail.swift in Sources */,
 				67B5A89E19EB749300167462 /* mztools.c in Sources */,
 				67400EF719BFE78200F800B9 /* AboutViewPhone.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 8.0, *)
 @IBDesignable class IngredientThumb: UICollectionViewCell {
     
     @IBOutlet var image:UIImageView!
@@ -71,9 +72,9 @@ import UIKit
                 UserHome.removeHistory(3, id: selfContainer.id.integerValue)
             }
         }
-        
-        var error: NSError? = nil
-        if !managedObjectContext.save(&error) {
+        do{
+            try managedObjectContext.save()
+        }catch{
             abort()
         }
     }

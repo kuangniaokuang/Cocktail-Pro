@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+@available(iOS 8.0, *)
 class RecipeDetailPhone: UIViewController {
     
     var CurrentData:Recipe!
@@ -62,7 +63,7 @@ class RecipeDetailPhone: UIViewController {
     var moresize:CGFloat = 0
     
     class func RecipesDetailPhoneInit()->RecipeDetailPhone{
-        var recipeDetail = UIStoryboard(name: "Recipes"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("recipeDetail") as RecipeDetailPhone
+        var recipeDetail = UIStoryboard(name: "Recipes"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("recipeDetail") as! RecipeDetailPhone
         return recipeDetail
     }
     
@@ -125,7 +126,7 @@ class RecipeDetailPhone: UIViewController {
         }
         
         if(ingridientView != nil){
-            recipeIngridients = UIStoryboard(name: "Recipes", bundle: nil).instantiateViewControllerWithIdentifier("recipeIngridients") as RecipeIngridients
+            recipeIngridients = UIStoryboard(name: "Recipes", bundle: nil).instantiateViewControllerWithIdentifier("recipeIngridients")as! RecipeIngridients
             recipeIngridients.recipeId = CurrentData.id.integerValue
             recipeIngridients.view.frame = CGRect(origin: CGPoint(x: 0, y: 34), size: recipeIngridients.size)
             ingridientView.addSubview(recipeIngridients.view)
@@ -155,8 +156,8 @@ class RecipeDetailPhone: UIViewController {
     //告知窗口现在有多少个item需要添加
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int
     {
-        let sectionInfo = self.fetchedStepsController.sections as [NSFetchedResultsSectionInfo]
-        let item = sectionInfo[section]
+        let sectionInfo = self.fetchedStepsController.sections
+        let item = sectionInfo![section]
         stepnum = item.numberOfObjects
         return stepnum
     }
@@ -164,8 +165,8 @@ class RecipeDetailPhone: UIViewController {
     //处理单个View的添加
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell!
     {
-        var tableCell :UITableViewCell = tableView.dequeueReusableCellWithIdentifier("stepCell") as UITableViewCell
-        let item = self.fetchedStepsController.objectAtIndexPath(indexPath) as RecipeStep
+        var tableCell :UITableViewCell = tableView.dequeueReusableCellWithIdentifier("stepCell")!
+        let item = self.fetchedStepsController.objectAtIndexPath(indexPath) as! RecipeStep
         tableCell.textLabel?.text = "\((indexPath.row+1)). "+item.stepInfo
         return tableCell
     }
@@ -179,7 +180,7 @@ class RecipeDetailPhone: UIViewController {
         if(hMainboard.constant == 280){
             var str:String = desc.text!
             NSLog(str)
-            var size = str.textSizeWithFont(self.desc.font, constrainedToSize: CGSize(width:304, height:1000))
+            var size = str.textSizeWithFont(self.desc.font!,constrainedToSize: CGSize(width:304, height:1000))
             if(size.height > (hDesc!.constant-28)){
                 /**/
                 UIView.animateWithDuration(0.4, animations: {
@@ -213,8 +214,9 @@ class RecipeDetailPhone: UIViewController {
             self.faver?.image = UIImage(named: "Heartno.png")
             UserHome.removeHistory(1, id: CurrentData.id.integerValue)
         }
-        var error: NSError? = nil
-        if !managedObjectContext.save(&error) {
+        do{
+            try managedObjectContext.save()
+        }catch{
             abort()
         }
     }
@@ -249,8 +251,10 @@ class RecipeDetailPhone: UIViewController {
         fetchRequest.predicate = condition
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         _fetchedStepsController = aFetchedResultsController
-        var error: NSError? = nil
-        if !_fetchedStepsController!.performFetch(&error) {
+        
+        do{
+            try _fetchedStepsController?.performFetch()
+        }catch{
             abort()
         }
         return _fetchedStepsController!

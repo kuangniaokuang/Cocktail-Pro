@@ -29,8 +29,13 @@ public struct JSONResponseSerializer : HTTPResponseSerializer {
         :returns: Returns a object from JSON data and an NSError if an error occured while parsing the data.
     */
     public func responseObjectFromResponse(response: NSURLResponse, data: NSData) -> (object: AnyObject?, error: NSError?) {
-        var error: NSError?
-        let response: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(), error: &error)
-        return (response,error)
+        var err: NSError?
+        var response : AnyObject!
+        do{
+            response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+        }catch{
+            err=error as NSError
+        }
+        return (response,err)
     }
 }

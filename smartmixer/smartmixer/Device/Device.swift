@@ -23,8 +23,8 @@ class Device: UIViewController , UIScrollViewDelegate {
     var connectDevice:ConnectDevice!=nil
     
     class func DeviceRoot()->UIViewController{
-        var device = UIStoryboard(name: "Device"+deviceDefine, bundle: nil).instantiateInitialViewController() as UIViewController
-        return device
+        var device = UIStoryboard(name: "Device"+deviceDefine, bundle: nil).instantiateInitialViewController()
+        return device!
     }
     
     override func viewDidLoad() {

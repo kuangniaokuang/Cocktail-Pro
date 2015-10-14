@@ -27,7 +27,7 @@ class ConnectDevice: UIViewController {
     @IBOutlet weak var showImage:UIImageView!
     
     class func ConncectDeviceInit()->ConnectDevice{
-       var connectDevice = UIStoryboard(name:"Device"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("connectDevice") as ConnectDevice
+       var connectDevice = UIStoryboard(name:"Device"+deviceDefine,bundle:nil).instantiateViewControllerWithIdentifier("connectDevice") as! ConnectDevice
         return connectDevice
     }
     

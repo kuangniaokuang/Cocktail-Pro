@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 8.0, *)
 class AboutViewPhone: UITableViewController,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,UIAlertViewDelegate{
     
     //头像图片
@@ -18,7 +19,7 @@ class AboutViewPhone: UITableViewController,UINavigationControllerDelegate,UIIma
     var delegate:NumberDelegate!
     
     class func AboutViewPhoneInit()->AboutViewPhone{
-        var aboutview = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutView") as AboutViewPhone
+        var aboutview = UIStoryboard(name: "UserCenter"+deviceDefine, bundle: nil).instantiateViewControllerWithIdentifier("aboutView") as! AboutViewPhone
         return aboutview
     }
     override func viewDidLoad() {
@@ -117,11 +118,11 @@ class AboutViewPhone: UITableViewController,UINavigationControllerDelegate,UIIma
     }
     
     //写入Document中
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var image = info["UIImagePickerControllerEditedImage"] as UIImage
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        var image = info["UIImagePickerControllerEditedImage"] as! UIImage
         headImage.image = image
         var imageData = UIImagePNGRepresentation(image)
-        imageData.writeToFile(applicationDocumentsPath+"/myimage.png", atomically: false)
+        imageData!.writeToFile(applicationDocumentsPath+"/myimage.png", atomically: false)
         self.dismissViewControllerAnimated(true, completion: nil)
         if(osVersion<8 && deviceDefine != ""){
             popview.dismissPopoverAnimated(true)
